@@ -15,7 +15,7 @@ def showDemopage():
     strName = "john"
     arr = [1,2,3]
     dict ={"name": "Mary"}
-    return render_template("demo.html",strName=strName,arr=arr[0],dict=dict)
+    return render_template("index.html",strName=strName,arr=arr[0],dict=dict)
 
 
 @app.route('/users',methods = ["GET"])
