@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <h1> Welcome {{username}} !</h1>
+        <div>
+        <table border=1>
+            {% for item in table %}
+            <tr>
+                <td>{{item}}</td>
+                <td>{{table[item]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </body>
+</html>

@@ -38,11 +38,12 @@ class User:
             dbconn = DatabasePool.getConnection()
             cursor = dbconn.cursor(dictionary=True)
             
-            sql = "select * from user where email =%s and password =%s"
-            cursor.execute(sql,(email,password))
+            sql = "select * from user where email =%s"
+            cursor.execute(sql,(email,))
             users =cursor.fetchone()
             print("Come here")
-            #--jwt encode to generate a token---
+            print(users)
+            #--jwt encode to generate a token--- 
             if users == None:
                return  ""
             else:
@@ -52,7 +53,7 @@ class User:
                 username = users['username']
                 jwtToken = jwt.encode({"role":role,"userid":userid,"username":username, "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=7200)},Settings.secretKey)
                 print(jwtToken)
-                return jwtToken
+                return jwtToken,username
             
             return users
         finally:

@@ -1,0 +1,57 @@
+<script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jsquery.min.js"></script>
+</script>
+<script>
+$(document).ready(function(){
+
+        $('$loginSubmit').click(function(){
+            e.preventDetault();
+            alert('I hate tomatoes.');
+            console.logs('dfsdfsdfsdfsdf')
+            
+            var email= $('#email').val();
+            var password = $('#password').val();
+            
+            if(email != "" && pwd !=""){
+                $.ajax({
+                    method : "POST",
+                    url:'/users/login',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({'email':email,'password':password}),
+                    dataType: "json",
+                    success: function(data){
+                        $('#msg').html('<span style="display:green;">You are logged in </span>');
+                    },
+                    statusCode:{
+                        400: function() {
+                            $('#msg').html('<span style="color:red;">Invalid Credentials</span>');
+                        }
+                    }
+                })
+            } 
+            else{
+                $('#msg').html('<span style="color:red;">Invalid Username and password</span>');
+            }
+        });
+    });
+</script>
+
+
+
+<!DOCTYPE html>
+<html>
+	
+			<form method="post">
+				<label for="email">
+					<i class="fas fa-user"></i> 
+				</label>
+				<input type="text" name="email" placeholder="Email" id="email" required>
+				<label for="password">
+					<i class="fas fa-lock"></i>
+				</label>
+				<input type="password" name="password" placeholder="Password" id="password" required>
+				<div class="msg">{{ msg }}</div>
+				<input type="submit" id="loginSubmit" value="Login">
+			</form>
+		</div>
+	</body>
+</html>

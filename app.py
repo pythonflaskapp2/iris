@@ -5,17 +5,13 @@ from jinja2 import exceptions
 import json
 from model.User import User
 from validation.Validataor import *
-from flask_cors import CORS
+import numpy as np
+#from flask_cors import CORS
 
 app=Flask(__name__) 
-CORS(app)
+#CORS(app)
 
-@app.route('/')
-def showDemopage():
-    strName = "john"
-    arr = [1,2,3]
-    dict ={"name": "Mary"}
-    return render_template("index.html",strName=strName,arr=arr[0],dict=dict)
+
 
 
 @app.route('/users',methods = ["GET"])
@@ -62,18 +58,36 @@ def getOneUser(userid):
         output = {"message":"You are not an authorized person to access this Service"}
         return jsonify(output),403
     
-@app.route('/users/login',methods = ["POST"])
-def loginUser():
+@app.route('/login', methods =["GET","POST"])
+def login():
     try:
-            userData = request.json
-            jwtToken= User.loginUser(userData['email'],userData['password'])
-            output = {"JWT":jwtToken}
-            return jsonify(output),200
-
+        print("login")
+        if request.method == "POST":
+            print(request.form['email']) 
+            print("post")
+            table = {}
+            
+            for i in np.arange(5):
+                print (i)
+                n= (i+1)*5
+                print(n)
+                table[i+1] = n
+            print (table)
+            email = request.form['email']
+            password = request.form['password']
+            print("after form submit", email)
+            jwtToken= User.loginUser(email,password)
+            print ("JWT",jwtToken)
+            if (jwtToken != ""):
+                return render_template("mainPage.html",username = jwtToken[1], table=table)
+            else:
+                print("no match")
+                return render_template ("login.html",message = "Invalid Login Credentials!")
     except Exception as err:
         print(err)
         output = {"Message":"Error occurred"}
-        return jsonify(output),500     
+        return jsonify(output),500  
+    return render_template('login.html')   
 
 
 if __name__ == '__main__':
