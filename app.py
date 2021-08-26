@@ -11,10 +11,6 @@ import numpy as np
 app=Flask(__name__) 
 #CORS(app)
 
-
-
-
-
     
 @app.route('/login', methods =["GET","POST"])
 def login():
@@ -24,7 +20,6 @@ def login():
             print(request.form['email']) 
             print("post")
             table = {}
-            
             for i in np.arange(5):
                 print (i)
                 n= (i+1)*5
