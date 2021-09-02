@@ -25,7 +25,7 @@ app.config.update(dict(
     MAIL_PASSWORD = 'IrisFlower!@#',
 ))
 mail = Mail(app)
-CORS(app)
+#CORS(app)
 #global reset_password_userid
 
 @app.route('/')
