@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <style>
+    .login-form {
+      width : 350px;
+      margin : 50 px auto;
+    }
+    .login-form form{
+        margin-bottom : 15px;
+        background: #f7f7f7;
+        box-shadow: 0px 2px 2px rgba(0,0,0,0.3);
+        padding:30px;
+    }
+    .login-form h2{
+        margin : 0 0 15px;
+    }
+    .form-control, .btn{
+        min-height : 38px;
+   
+        
+    }
+    .btn{
+        font-size: 15px;
+        font-weight: bold;
+    }
+</style> 
+</head>
+  
+    <body>
+        {% if jwt != " " %}
+        <h1> Welcome {{  username }}  {{predictions}} {{prob}} !</h1>
+        <div class="login-form">
+            <form action="{{ url_for('predictPage') }}" method="get">
+                <h2 class="text-center">IRIS FLOWER PREDICTION</h2>
+            <div  class="form-group">
+                    <label>Sepal Length</label>
+                    <input type="text"  class="form-control" id="" placeholder="" name="sepal-length" required="required" >
+            </div>
+            <div  class="form-group">
+                <label>Sepal Width</label>
+                <input type="text" class="form-control" id="" placeholder="" name="sepal-width" required="required" >
+            </div>
+            <div  class="form-group">
+                <label>Petal Length</label>
+                <input type="text" class="form-control" id="" placeholder="" name="petal-length" required="required" >
+            </div>
+            <div  class="form-group">
+                <label>Petal Width</label>
+                <input type="text" class="form-control" id="" placeholder="" name="petal-width" required="required" >
+            </div>
+            <div class="form-group">
+                
+                <input class="btn btn-primary btn-block" type="submit" value="Predict">
+                <div>
+                    <p class="text-muted"> {{message}} </p>
+                </div>
+            </div>
+            </form>
+            </div>
+            <div calss="table table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sepal Length</th>
+                            <th scope="col">Sepal Width</th>
+                            <th scope="col">Petal Length</th>
+                            <th scope="col">Petal Width</th>
+                            <th scop2="col">Prediction</th>
+                            <th scope="col">Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in result %}
+                        <tr>
+                            <td>{{ item['sepalLength'] }}</td>
+                            <td>{{ item['sepalWidth'] }}</td>
+                            <td>{{ item['petalLength'] }}</td>
+                            <td>{{ item['petalWidth'] }}</td>
+                            <td>{{ item['prediction'] }}</td>
+                            <td>{{ item['InsertionDate'] }}</td>
+                            <td><button class="btn btn-outline-danger" type="button">remove</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </body>
+</html>

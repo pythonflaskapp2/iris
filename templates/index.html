@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script type=text/javascript>
+    $(function() {
+      $('input#homelogin').on('click', function(e) {
+        e.preventDefault()
+        $.ajax({method :"GET",
+        url :'/login',
+        contentType : 'application/json;charset=UTF-8',
+        dataType:"json",
+        success:function(data) {
+          $('div#container').html(data);
+            }
+        });
+
+      });
+    });
+    </script>
+<style>
+          .register-form h2{
+          margin : 0 0 15px;
+      }
+      .form-control, .btn{
+          min-height : 38px;
+          border-radius : 2px;
+      }
+      .btn{
+          font-size: 15px;
+          font-weight: bold;
+      }
+</style>
+
+</head>
+
+
+<body>
+<div 
+<div class = "container-fluid">
+    <div class ="row"
+    <div class ="col-sm-4">
+
+    </div>
+    <div class="cols-sm-4">
+    <div class="login-form">
+        <form action="" method="get" >
+            <h2 class="text-center">IRIS FLOWER PREDICTION </h2>
+        
+        <div class="form-group">
+            <input class="btn btn-primary btn-block" id="homelogin" type="submit" value="Log in">
+            <input class="btn btn-primary btn-block" type="submit" value="Register"
+    <div>
+    <p class="text-muted"> {{message}} </p>
+</div>
+</div>
+        </form>
+
+<div class="col-sm-4"></div>
+</div>
+<div id ="container"></div>
+</body>
+</html>

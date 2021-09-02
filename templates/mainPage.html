@@ -1,15 +1,223 @@
-<html>
-    <body>
-        <h1> Welcome {{username}} !</h1>
-        <div>
-        <table border=1>
-            {% for item in table %}
-            <tr>
-                <td>{{item}}</td>
-                <td>{{table[item]}}</td>
-            </tr>
-            {% endfor %}
-        </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script>
+      function DeletePrediction(_predictionid){
+        //make an ajax call and get status value using the same 'id'
+        var prediction_id = _predictionid
+        $.ajax({
+
+            type:"DELETE",
+            url:"{{ url_for('deletePrediction')}}",
+                           //  (or whatever your url is)
+            data:JSON.stringify({predictionid:prediction_id}),
+            dataType: "json",
+            contentType: 'application/json;charset=UTF-8',
+            //can send multipledata like {data1:var1,data2:var2,data3:var3
+            //can use dataType:'text/html' or 'json' if response type expected 
+            success:function(responsedata){
+               // process on data
+              // alert("got response as "+"'"+responsedata+"'");
+               document.getElementById(responsedata).remove()
+               prob = document.getElementById("probability")
+               prob.style.visibility = 'hidden'
+
+        }
+     })
+
+}
+  </script>
+   <style>
+     /*  .login-form {
+        width : 350px;
+        margin : 50 px auto; 
+      } */
+      .login-form form{
+          margin-bottom : 15px;
+          background: #f7f7f7;
+          box-shadow: 0px 2px 2px rgba(0,0,0,0.3);
+          padding:30px;
+      }
+      .login-form h2{
+          margin : 0 0 15px;
+      }
+      .form-control, .btn{
+          min-height : 38px;
+          border-radius : 3px;
+          
+      }
+      .btn{
+          font-size: 15px;
+          font-weight: bold;
+          
+      }
+      .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+           background-color:#4B0082 !important;
+           border:0px;
+       }
+      .navbar {
+      margin-bottom: 5px;
+      border-radius: 0;
+    }
+    
+    /* Remove the jumbotron's default bottom margin */ 
+     .jumbotron {
+      margin-bottom: 0;
+      background: url("{{url_for('static',filename='iris.jpg')}}") no-repeat center center;
+      background-size: cover;
+    }
+    /* rgb(213,205,214) */
+    .jumbotron, .h1{
+        color: #4B0082
+    }
+   
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+    .navbar-custom {
+            background-color:#C3B1E1
+        }
+        /* Modify brand and text color */
+         
+       
+    .navbar-light .navbar-nav .nav-link{
+        font-size: 15px;
+        color: #4B0082;
+        
+    }
+    input.transparent-input{
+       background-color:rgba(0,0,0,0.03) !important;
+
+    }
+
+    .jumbotron .jumbotron-custom{
+        background-color:rgba(0,0,0,0,3) !important ;
+         background-size: cover;
+    }
+
+</style> 
+</head>
+<body>
+   <!-- <div class="">
+    <div class="container text-left"></div>
+    <h1> Iris Prediction</h1>-->
+   
+      <!--https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Machine+Learning+R/iris-machinelearning.png-->
+    </div> <!-- <!--#BDB5D5-->
+    <div>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Iris Flower Prediction</a>
+        <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+          <ul class="nav navbar-nav">
+    
+           <!-- <li class="nav-item active"><a class="nav-link" href="{{url_for('login')}}">Login/SignUp</a></li>-->
+            <li class="nav-item"><a class="nav-link" href="{{url_for('predictPage')}}">Prediction</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{url_for('logout')}}">Log out</a></li>
+           <!--navbar-text mb-0 h3-->
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item"><h3>Welcome {{username}}!</h3></li>
+           
+           
+          </ul>
         </div>
+      </nav>
+    </nav>
+    </div>
+        {% if jwt != " " %}
+        
+      <!--  <div style="display:block"><h1 id="probability">{{prob}}</h1></div>-->
+        <div class="login-form">
+            <form action="{{ url_for('predictPage') }}" method="post">
+                <div class="container d-flex h-100">
+                    <div class="row align-self-center w-100">
+                        <div class="col-10 mx-auto">
+                            <div class="jumbotron">
+                                <div class="row align-self-left w-50">
+                                    <div class="alert" role="alert" id="probability">{{prob}}</div>
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <div  class="form-group">
+                                                    <input type="text"  class="form-control transparent-input" id="" placeholder="Sepal Length" name="sepal-length" required="required" >
+                                                </div>
+                                        </td>
+                                        <td>
+                                                <div  class="form-group">
+                                                    <input type="text" class="form-control transparent-input" id="" placeholder="Sepal Width" name="sepal-width" required="required" >
+                                                </div>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div  class="form-group">
+                                                    <input type="text" class="form-control transparent-input" id="" placeholder="Petal Length" name="petal-length" required="required" >
+                                                </div>
+                                        </td>
+                                        <td>
+                                                <div  class="form-group">
+                                                    <input type="text" class="form-control transparent-input" id="" placeholder="Petal Width" name="petal-width" required="required" >
+                                                </div>
+                                        </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="row align-self-center w-50">
+                                    <div class="col-6 mx-auto">
+                                <div class="form-group">
+                                    <input class="btn btn-primary btn-block" type="submit" value="Predict">
+                                    <div>
+                                        <p class="text-muted"> {{message}} </p>
+                                    </div>
+                                </div>
+                            </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>  
+            <div class="row align-self-center w-100">
+                <div class="col-10 mx-auto">
+                    <div calss="table table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sepal Length</th>
+                                    <th scope="col">Sepal Width</th>
+                                    <th scope="col">Petal Length</th>
+                                    <th scope="col">Petal Width</th>
+                                    <th scop2="col">Prediction</th>
+                                    <th scope="col">Date/Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in result %}
+                                <tr id="{{item['predictionId']}}">
+                                    <td>{{ item['sepalLength'] }}</td>
+                                    <td>{{ item['sepalWidth'] }}</td>
+                                    <td>{{ item['petalLength'] }}</td>
+                                    <td>{{ item['petalWidth'] }}</td>
+                                    <td>{{ item['prediction'] }}</td>
+                                    <td>{{ item['InsertionDate'] }}</td>
+                                    <td><button class="btn btn-outline-danger" id="{{item['predictionId']}}" type="button" onclick="DeletePrediction(id)"  >remove</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </body>
 </html>

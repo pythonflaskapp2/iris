@@ -1,4 +1,5 @@
 from flask import Flask,jsonify,render_template,request,g
+from werkzeug.utils import redirect
 from config.Settings import Settings
 import functools
 import jwt
@@ -6,81 +7,32 @@ import jwt
 
 def login_required(func):
     @functools.wraps(func)
-    def wrapper_decorator(*args, **kwargs):
+    def secure_login(*args, **kwargs):
         # Do something before
-        token=request.headers.get('Authorization')
         auth=True
-        #print(token.index("Bearer"))
-        if token and token.index("Bearer")==0:
-            token=token.split(" ")[1]
-        else:
-            auth=False
-        if auth:
+        auth_token = request.cookies.get('jwt')
+        print("auth_token",auth_token)
+        if auth_token=='':
+            auth = False
+        if auth_token:
             try:
                 #decode
-                payload=jwt.decode(token,Settings.secretKey,"HS256")
-
-                g.role=payload['role']
+                payload=jwt.decode(auth_token,Settings.secretKey,"HS256")
                 g.userid=payload['userid']
-                
+                g.username=payload['username']
             except jwt.exceptions.InvalidSignatureError as err:
                 print(err)
                 auth=False
         
         if auth==False:
-            output={"Message":"Error JWT"}
-            return jsonify(output),403
+            return render_template('login.html',message='Please login to render the service')
         
         value = func(*args, **kwargs)
         # Do something after
         return value
-    return wrapper_decorator
+    return secure_login
 
-def admin_required(func):
-    @functools.wraps(func)
-    def wrapper_decorator(*args, **kwargs):
-        token = request.headers.get("Authorization")
-        auth = True
-        if token and token.index("Bearer")==0:
-            token = token.split(" ")[1]
-        else:
-            auth = False
-        if auth:
-            try:
-                payload = jwt.decode(token, Settings.secretKey,"HS256")
-                g.role = payload['role']
 
-            except jwt.ExpiredSignatureError as err:
-                print(err)
-                auth = False
-        value = func(*args, **kwargs)
-        print("Value",value)
-        return value
-    print("wrapper",wrapper_decorator)
-    
-    return wrapper_decorator
-
-def require_isAdminOrSelf(func):
-    @functools.wraps(func)
-    def wrapper_decorator(*args, **kwargs):
-        token = request.headers.get("Authorization")
-        auth = True
-        if token and token.index("Bearer")==0:
-            token = token.split(" ")[1]
-        else:
-            auth = False
-        if auth:
-            try:
-                payload = jwt.decode(token, Settings.secretKey,"HS256")
-                #g.role = payload['role']
-                g.role = payload['role']
-                g.userid = payload['userid']
-            except jwt.ExpiredSignatureError as err:
-                print(err)
-                auth = False
-        value = func(*args, **kwargs)
-        return value
-    return wrapper_decorator
 
 
 
