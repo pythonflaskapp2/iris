@@ -177,7 +177,7 @@ def password_reset():
                send_email(user)
                # Thread(target=send_email, args=(app, msg)).start()
                
-            return redirect(url_for('login',message="Email Sent. Please check your inbox"))
+            return render_template('login.html',message="Email Sent. Please check your inbox")
     except Exception as err:
         output ={"Message":err}
         return jsonify(output,500)
